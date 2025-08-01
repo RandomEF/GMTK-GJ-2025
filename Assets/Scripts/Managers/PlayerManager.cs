@@ -1,15 +1,11 @@
-using System;
-using System.Data;
-using System.IO;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
 
     public GameObject player;
+    public PlayerLook lookScript;
     public MenuManager menuManager;
     public InputSystem_Actions inputs;
 
@@ -20,7 +16,7 @@ public class PlayerManager : MonoBehaviour
             Instance = this; // Sets the player manager to this object
         }
         inputs = new InputSystem_Actions(); // make a new set of player inputs
-        inputs.Player.Enable();
+        inputs.UI.Enable();
     }
 
     void Start()
@@ -29,16 +25,16 @@ public class PlayerManager : MonoBehaviour
         DontDestroyOnLoad(gameObject); // Since the game will start in the title screen, it makes sure that the player, manager, and all things attached are loaded and maintained across all scene loads
     }
 
-    public void SetCursorMode()
+    public void SetCursorMode(bool state)
     {
-        if (SceneManager.GetActiveScene().name == "Title")
-        {
-            Camera.main.GetComponent<PlayerLook>().SetCursorLock(false); // Set whether the cursor should be locked or not
-        }
-        else
-        {
-            Camera.main.GetComponent<PlayerLook>().SetCursorLock(true);
-        }
+        lookScript.SetCursorLock(state);
+    }
+
+    public void StartGame()
+    {
+        menuManager.ChangeMenu("HUD");
+        inputs.UI.Disable();
+        inputs.Player.Enable();
     }
 
     public void Quit()

@@ -4,8 +4,6 @@ using UnityEngine.UI;
 public class Options : MonoBehaviour
 {
     [SerializeField] private Slider volume;
-    [SerializeField] private Slider fov;
-    [SerializeField] private Slider zoomFov;
 
     public void UpdateVolume()
     {

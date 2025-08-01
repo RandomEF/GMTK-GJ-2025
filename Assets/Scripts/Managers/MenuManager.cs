@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
@@ -13,6 +12,8 @@ public class MenuManager : MonoBehaviour
     public Canvas options;
     public Canvas pause;
     public Canvas hud;
+    public Canvas orders;
+    public Canvas craft;
 
     public string currentMenu = "";
     public string lastMenu = "";
@@ -34,19 +35,20 @@ public class MenuManager : MonoBehaviour
             { "Main", (main, true) },
             { "Pause", (pause, true) },
             { "HUD", (hud, false) },
-            { "Options", (options, true) }
+            { "Options", (options, true) },
+            { "Orders", (orders, true)},
+            { "Craft", (craft, true)}
         };
     }
 
     void Start()
     {
         manager = PlayerManager.Instance; // Grab the player manager
-        FetchCanvases(new Scene(), new LoadSceneMode()); // Fetch all the canvases
-        SceneManager.sceneLoaded += FetchCanvases; // Attach the fetching of the canvases to every scene load
+        //FetchCanvases(); // Fetch all the canvases
         DisableAll(); // Disable every canvas
         ChangeMenu("Main"); // Change the canvas
-    }
-    public void FetchCanvases(Scene _, LoadSceneMode __)
+    }/*
+    public void FetchCanvases()
     { // Attempt to fetch a reference to every canvas
         foreach (string canvas in currentCanvas.Keys.ToList())
         { // get a copy of the keys
@@ -67,7 +69,7 @@ public class MenuManager : MonoBehaviour
             }
         }
         Debug.Log("Fetched all canvases");
-    }
+    }*/
 
     public void DisableAll()
     {
@@ -100,13 +102,20 @@ public class MenuManager : MonoBehaviour
         currentCanvas[menu].Item1.GetComponent<CanvasGroup>().alpha = 1; // Make it visible to the player
         currentMenu = menu; // Changes the current menu
         Debug.Log($"Changed menu to '{menu}'");
-        manager.SetCursorMode();
+        if (menu == "Craft" || menu == "Pause" || menu == "Orders")
+        {
+            manager.SetCursorMode(false);
+        }
+        else
+        {
+            manager.SetCursorMode(true);
+        }
     }
 
     public void GoBack()
     {
         if (lastMenu != "" && currentCanvas[lastMenu].Item1 != null)
-        { // If there is a previous menu and it exists in the scene.
+        {
             ChangeMenu(lastMenu); // change to the previous menu
         }
         else

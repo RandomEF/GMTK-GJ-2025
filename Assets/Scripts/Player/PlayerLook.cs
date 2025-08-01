@@ -1,7 +1,5 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class PlayerLook : MonoBehaviour
 {
@@ -15,7 +13,7 @@ public class PlayerLook : MonoBehaviour
     {
         manager = PlayerManager.Instance; // Fetch a reference to the game manager
         lookAction = manager.inputs.Player.Look; // Fetch a reference to the looking input for quick access
-        SetCursorLock(true); //TODO Change this to false once a menu has been made
+        SetCursorLock(false);
     }
 
     // Update is called once per frame
