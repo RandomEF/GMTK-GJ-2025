@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -6,8 +7,9 @@ public class PlayerManager : MonoBehaviour
 
     public GameObject player;
     public PlayerLook lookScript;
-    public MenuManager menuManager;
+    private MenuManager menuManager;
     public InputSystem_Actions inputs;
+    public Dictionary<OrdersMenu.Items, int> producedItems = new Dictionary<OrdersMenu.Items, int>();
 
     void Awake()
     {

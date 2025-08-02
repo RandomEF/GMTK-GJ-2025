@@ -102,14 +102,7 @@ public class MenuManager : MonoBehaviour
         currentCanvas[menu].Item1.GetComponent<CanvasGroup>().alpha = 1; // Make it visible to the player
         currentMenu = menu; // Changes the current menu
         Debug.Log($"Changed menu to '{menu}'");
-        if (menu == "Craft" || menu == "Pause" || menu == "Orders")
-        {
-            manager.SetCursorMode(false);
-        }
-        else
-        {
-            manager.SetCursorMode(true);
-        }
+        manager.SetCursorMode(!currentCanvas[menu].Item2);
     }
 
     public void GoBack()

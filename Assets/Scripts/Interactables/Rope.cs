@@ -3,7 +3,7 @@ using UnityEngine;
 public class Rope : Interactable
 {
     public float ropeIntegrity = 1000;
-    public float ropeWeakness => 10;
+    public float ropeWeakness => 1;
     public bool isBeingUsed = false;
 
     override public void Interact(GameObject player)

@@ -1,5 +1,6 @@
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Machine : Interactable
 {
@@ -9,8 +10,20 @@ public class Machine : Interactable
     bool isWorking = false;
     public float rate = 1f;
     private PlayerManager manager;
-    public GameObject producedItem;
-    public Transform productionLocation;
+    public OrdersMenu.Items generatedItem;
+    public Animator animator;
+    public SkinnedMeshRenderer machineRenderer;
+    public Color notWorkingColor;
+    public Color workingColor;
+
+    void Start()
+    {
+        gameObject.tag = "Interact"; // Mark the current object as an interactable
+        manager = PlayerManager.Instance;
+        animator.speed = 0;
+        machineRenderer.materials[1].color = notWorkingColor;
+        machineRenderer.materials[1].SetColor("_EmissionColor", notWorkingColor);
+    }
 
     override public void Interact(GameObject player)
     {
@@ -41,6 +54,9 @@ public class Machine : Interactable
                 interactionScript.heldItem.transform.rotation = interactionScript.itemHold.rotation;
                 interactionScript.heldItem.GetComponent<Rope>().isBeingUsed = false;
                 interactionScript.heldItem.transform.SetParent(interactionScript.itemHold.transform);
+                animator.speed = 1;
+                machineRenderer.materials[1].color = workingColor;
+                machineRenderer.materials[1].SetColor("_EmissionColor", workingColor);
                 isWorking = true;
                 Debug.Log("Swapped ropes");
             }
@@ -52,6 +68,9 @@ public class Machine : Interactable
                 interactionScript.isHoldingItem = false;
                 interactionScript.heldItem = null;
                 heldRope.GetComponent<Rope>().isBeingUsed = true;
+                animator.speed = 1;
+                machineRenderer.materials[1].color = workingColor;
+                machineRenderer.materials[1].SetColor("_EmissionColor", workingColor);
                 isWorking = true;
                 Debug.Log("Using rope");
             }
@@ -67,6 +86,9 @@ public class Machine : Interactable
                 interactionScript.heldItem.transform.SetParent(interactionScript.itemHold.transform);
                 interactionScript.heldItem.GetComponent<Rope>().isBeingUsed = false;
                 interactionScript.isHoldingItem = true;
+                animator.speed = 0;
+                machineRenderer.materials[1].color = notWorkingColor;
+                machineRenderer.materials[1].SetColor("_EmissionColor", notWorkingColor);
                 isWorking = false;
                 Debug.Log("Lost rope");
             }
@@ -80,14 +102,26 @@ public class Machine : Interactable
         }
         if (progress >= 100)
         {
-            Instantiate(producedItem, position: productionLocation.position, rotation: productionLocation.rotation);
+            //Instantiate(producedItem, position: productionLocation.position, rotation: productionLocation.rotation);
+            try
+            {
+                manager.producedItems[generatedItem] += 1;
+            }
+            catch (System.Collections.Generic.KeyNotFoundException)
+            {
+                manager.producedItems[generatedItem] = 1;
+            }
+            Debug.Log(manager.producedItems[generatedItem]);
             progress -= 100;
         }
     }
-    public void RopeBroke()
+    public void RopeBroke() // Called by the broken rope
     {
         Destroy(heldRope);
         heldRope = null;
+        animator.speed = 0;
+        machineRenderer.materials[1].color = notWorkingColor;
+        machineRenderer.materials[1].SetColor("_EmissionColor", notWorkingColor);
         isWorking = false;
     }
 }
