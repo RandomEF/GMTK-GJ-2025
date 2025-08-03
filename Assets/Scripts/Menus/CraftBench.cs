@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,6 +29,11 @@ public class CraftBench : Interactable
     public int strongNeeded = 10;
     public int bestNeeded = 15;
 
+    [Header("UI")]
+    public TMP_Text loopCount;
+    public TMP_Text loopRequired;
+    public TMP_Dropdown dropdown;
+
     public enum RopeTypes
     {
         weak,
@@ -35,6 +41,31 @@ public class CraftBench : Interactable
         reinforced,
         strong,
         best
+    }
+    public void ChangeRope()
+    {
+        switch (dropdown.value)
+        {
+            case 0:
+                selectedRope = RopeTypes.weak;
+                break;
+            case 1:
+                selectedRope = RopeTypes.basic;
+                break;
+            case 2:
+                selectedRope = RopeTypes.reinforced;
+                break;
+            case 3:
+                selectedRope = RopeTypes.strong;
+                break;
+            case 4:
+                selectedRope = RopeTypes.best;
+                break;
+            default:
+                Debug.LogWarning("selectedRope did not match any known value for the maximum loops, returned 0");
+                break;
+        }
+        loopRequired.text = "Loops Required: " + GetLoopsNeeded().ToString();
     }
     public int GetLoopsNeeded()
     {
@@ -124,11 +155,13 @@ public class CraftBench : Interactable
         if (nextCheckpoint == 1 && checkpointsTouched == 6)
         {
             ropeLoops += 1;
+            loopCount.text = "Loops completed: " + ropeLoops.ToString();
             checkpointsTouched = 0;
             if (ropeLoops == GetLoopsNeeded())
             {
                 Instantiate(GetNewRope(), spawnLocation.position, spawnLocation.rotation);
                 ropeLoops = 0;
+                loopCount.text = "Loops completed: " + ropeLoops.ToString();
             }
         }
     }

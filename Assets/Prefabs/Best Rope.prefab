@@ -116,6 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ropeIntegrity: 1000
   isBeingUsed: 0
+  ropeName: Best Rope
 --- !u!65 &6899569465619218373
 BoxCollider:
   m_ObjectHideFlags: 0

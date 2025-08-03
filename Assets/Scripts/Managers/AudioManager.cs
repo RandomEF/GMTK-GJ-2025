@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -7,6 +8,8 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioSource sfxPrefab;
     [SerializeField] private AudioMixer mixer;
+    [SerializeField] private AudioSource music;
+    [SerializeField] private AudioClip gameTrack;
 
     void Awake()
     {
@@ -14,6 +17,13 @@ public class AudioManager : MonoBehaviour
         { // Set the static reference to this
             Instance = this;
         }
+    }
+    private void Start()
+    {
+        music.clip = gameTrack;
+        music.volume = 1;
+        music.loop = true;
+        music.Play();
     }
 
     public void PlaySFXClip(AudioClip clip, Transform location, float volume)
@@ -31,5 +41,9 @@ public class AudioManager : MonoBehaviour
     public void SetSFXVolume(float volume)
     { // Set the volume of the SFX channel
         mixer.SetFloat("sfxVolume", volume);
+    }
+    public void SetMusicVolume(float volume)
+    {
+        mixer.SetFloat("musicVolume", volume);
     }
 }

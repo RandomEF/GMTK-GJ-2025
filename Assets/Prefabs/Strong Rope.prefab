@@ -137,3 +137,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ropeIntegrity: 500
   isBeingUsed: 0
+  ropeName: Strong Rope

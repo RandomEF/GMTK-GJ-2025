@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 516a52c3f4f15c54396e71142f666491, type: 3}
       propertyPath: m_Name
-      value: Weak Rope 1
+      value: Weak Rope
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -85,6 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ropeIntegrity: 50
   isBeingUsed: 0
+  ropeName: Weak Rope
 --- !u!65 &5719297394631858784
 BoxCollider:
   m_ObjectHideFlags: 0

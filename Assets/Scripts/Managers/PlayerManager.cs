@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
@@ -10,6 +11,12 @@ public class PlayerManager : MonoBehaviour
     private MenuManager menuManager;
     public InputSystem_Actions inputs;
     public Dictionary<OrdersMenu.Items, int> producedItems = new Dictionary<OrdersMenu.Items, int>();
+    public TMP_Text moneyText;
+    public int money = 0;
+    public TMP_Text gameOverText;
+    public GameObject gameOverButton;
+    public bool isPlaying = false;
+    private OrdersMenu ordersMenu;
 
     void Awake()
     {
@@ -24,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         menuManager = MenuManager.Instance; // Get the menu manager
+        ordersMenu = OrdersMenu.Instance;
         DontDestroyOnLoad(gameObject); // Since the game will start in the title screen, it makes sure that the player, manager, and all things attached are loaded and maintained across all scene loads
     }
 
@@ -37,6 +45,42 @@ public class PlayerManager : MonoBehaviour
         menuManager.ChangeMenu("HUD");
         inputs.UI.Disable();
         inputs.Player.Enable();
+        isPlaying = true;
+        ordersMenu.MakeOrder();
+        StartCoroutine(ordersMenu.Timer());
+    }
+
+    public void AddMoney(int amount)
+    {
+        money += amount;
+        moneyText.text = "Money: " + money.ToString();
+        if (money < 0)
+        {
+            GameOver();
+        }
+    }
+    public void AddItem(OrdersMenu.Items item, int amount)
+    {
+        try
+        {
+            producedItems[item] += amount;
+        }
+        catch (System.Collections.Generic.KeyNotFoundException)
+        {
+            producedItems[item] = 1;
+        }
+        ordersMenu.CheckItems();
+    }
+
+    public void GameOver()
+    {
+        Time.timeScale = 0;
+        gameOverText.text = "Game Over\n";
+        gameOverButton.SetActive(true);
+        SetCursorMode(false);
+        inputs.Player.Disable();
+        inputs.UI.Enable();
+        isPlaying = false;
     }
 
     public void Quit()

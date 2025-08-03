@@ -17,12 +17,7 @@ public class MenuManager : MonoBehaviour
 
     public string currentMenu = "";
     public string lastMenu = "";
-
-#nullable enable
-    [SerializeField]
-    public Dictionary<string, (Canvas, bool)> currentCanvas;
-
-#nullable disable
+    [SerializeField] public Dictionary<string, (Canvas, bool)> currentCanvas;
 
     void Awake()
     {

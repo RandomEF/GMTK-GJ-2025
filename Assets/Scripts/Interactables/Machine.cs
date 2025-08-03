@@ -1,4 +1,4 @@
-using UnityEditor.Rendering;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +7,7 @@ public class Machine : Interactable
     public float progress = 0f;
     public Transform ropeSlot;
     public GameObject heldRope;
-    bool isWorking = false;
+    private bool isWorking = false;
     public float rate = 1f;
     private PlayerManager manager;
     public OrdersMenu.Items generatedItem;
@@ -15,6 +15,16 @@ public class Machine : Interactable
     public SkinnedMeshRenderer machineRenderer;
     public Color notWorkingColor;
     public Color workingColor;
+    public Color emptyColor;
+
+    [Header("GUI Variables")]
+    public RawImage itemImage;
+    public Image progressBar;
+    public TMP_Text progressPercent;
+    public TMP_Text ropeName;
+    public TMP_Text currentState;
+    public TMP_Text itemName;
+    public TMP_Text ropeState;
 
     void Start()
     {
@@ -23,10 +33,12 @@ public class Machine : Interactable
         animator.speed = 0;
         machineRenderer.materials[1].color = notWorkingColor;
         machineRenderer.materials[1].SetColor("_EmissionColor", notWorkingColor);
+        itemName.text = OrdersMenu.GetItemName(generatedItem);
+        itemImage.texture = OrdersMenu.Instance.GetItemImage(generatedItem);
     }
 
     override public void Interact(GameObject player)
-    {
+    { // TODO This if can be optimised by changing condition orders and maybe moving some things into functions
         /*
         4 cases:
             Player no rope, machine no rope
@@ -52,11 +64,15 @@ public class Machine : Interactable
                 heldRope.GetComponent<Rope>().isBeingUsed = true;
                 interactionScript.heldItem.transform.position = interactionScript.itemHold.position;
                 interactionScript.heldItem.transform.rotation = interactionScript.itemHold.rotation;
-                interactionScript.heldItem.GetComponent<Rope>().isBeingUsed = false;
                 interactionScript.heldItem.transform.SetParent(interactionScript.itemHold.transform);
+                interactionScript.heldItem.GetComponent<Rope>().isBeingUsed = false;
                 animator.speed = 1;
                 machineRenderer.materials[1].color = workingColor;
+                machineRenderer.materials[2].color = heldRope.GetComponent<Renderer>().material.color;
                 machineRenderer.materials[1].SetColor("_EmissionColor", workingColor);
+
+                currentState.text = "STATE : Working";
+                ropeName.text = heldRope.GetComponent<Rope>().ropeName;
                 isWorking = true;
                 Debug.Log("Swapped ropes");
             }
@@ -70,7 +86,11 @@ public class Machine : Interactable
                 heldRope.GetComponent<Rope>().isBeingUsed = true;
                 animator.speed = 1;
                 machineRenderer.materials[1].color = workingColor;
+                machineRenderer.materials[2].color = heldRope.GetComponent<Renderer>().material.color;
                 machineRenderer.materials[1].SetColor("_EmissionColor", workingColor);
+
+                currentState.text = "STATE : Working";
+                ropeName.text = heldRope.GetComponent<Rope>().ropeName;
                 isWorking = true;
                 Debug.Log("Using rope");
             }
@@ -88,7 +108,12 @@ public class Machine : Interactable
                 interactionScript.isHoldingItem = true;
                 animator.speed = 0;
                 machineRenderer.materials[1].color = notWorkingColor;
+                machineRenderer.materials[2].color = emptyColor;
                 machineRenderer.materials[1].SetColor("_EmissionColor", notWorkingColor);
+
+                ropeState.text = "Rope Health: No rope";
+                currentState.text = "STATE : No Rope";
+                ropeName.text = "Empty";
                 isWorking = false;
                 Debug.Log("Lost rope");
             }
@@ -99,19 +124,15 @@ public class Machine : Interactable
         if (isWorking)
         {
             progress += Time.deltaTime * rate;
+            progressBar.fillAmount = progress / 100;
+            progressPercent.text = progress.ToString() + "%";
+            ropeState.text = "Rope Health: " + heldRope.GetComponent<Rope>().ropeIntegrity.ToString();
         }
         if (progress >= 100)
         {
             //Instantiate(producedItem, position: productionLocation.position, rotation: productionLocation.rotation);
-            try
-            {
-                manager.producedItems[generatedItem] += 1;
-            }
-            catch (System.Collections.Generic.KeyNotFoundException)
-            {
-                manager.producedItems[generatedItem] = 1;
-            }
-            Debug.Log(manager.producedItems[generatedItem]);
+            manager.AddItem(generatedItem, 1);
+            //Debug.Log(manager.producedItems[generatedItem]);
             progress -= 100;
         }
     }
@@ -121,7 +142,12 @@ public class Machine : Interactable
         heldRope = null;
         animator.speed = 0;
         machineRenderer.materials[1].color = notWorkingColor;
+        machineRenderer.materials[2].color = emptyColor;
         machineRenderer.materials[1].SetColor("_EmissionColor", notWorkingColor);
+
+        ropeState.text = "Rope Health: No rope";
+        currentState.text = "STATE : Rope Broke";
+        ropeName.text = "Empty";
         isWorking = false;
     }
 }

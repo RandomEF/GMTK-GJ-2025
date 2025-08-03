@@ -34,7 +34,7 @@ public class PauseGame : MonoBehaviour
             else if (prePauseMenu == "Orders")
             {
                 playerInputs.OrdersMenu.Enable();
-                menuManager.ChangeMenu("Order");
+                menuManager.ChangeMenu("Orders");
             }
             else
             {

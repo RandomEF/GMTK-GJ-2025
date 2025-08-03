@@ -942,15 +942,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             ""id"": ""05c5dc15-fc4e-453d-950b-83b2b76aa72e"",
             ""actions"": [
                 {
-                    ""name"": ""UnlockTab"",
-                    ""type"": ""Button"",
-                    ""id"": ""afad1739-5e63-4ea1-b3de-e8485e45c336"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Exit"",
                     ""type"": ""Button"",
                     ""id"": ""7ba4d34d-3b37-4567-924c-c0d1d21150ce"",
@@ -979,17 +970,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""f7f022fe-cfc8-47f3-9544-d604169d7a06"",
-                    ""path"": ""<Keyboard>/tab"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""UnlockTab"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": ""WASD"",
                     ""id"": ""55ad2fd1-5c37-4483-b306-b60ef807d297"",
@@ -1058,6 +1038,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""e583caba-994e-48a1-9a09-e5198abb89ee"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""6ebce5fe-7fdc-4154-bcae-2ceed90d7ab2"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
@@ -1097,6 +1088,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""c76c186e-97cf-4198-9f11-35934f9c1081"",
                     ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e9156ff2-362c-49bc-97d4-b38b1a87be1c"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -1172,7 +1174,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_UI_Exit = m_UI.FindAction("Exit", throwIfNotFound: true);
         // CraftMenu
         m_CraftMenu = asset.FindActionMap("CraftMenu", throwIfNotFound: true);
-        m_CraftMenu_UnlockTab = m_CraftMenu.FindAction("UnlockTab", throwIfNotFound: true);
         m_CraftMenu_Exit = m_CraftMenu.FindAction("Exit", throwIfNotFound: true);
         m_CraftMenu_Move = m_CraftMenu.FindAction("Move", throwIfNotFound: true);
         m_CraftMenu_Pause = m_CraftMenu.FindAction("Pause", throwIfNotFound: true);
@@ -1631,7 +1632,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     // CraftMenu
     private readonly InputActionMap m_CraftMenu;
     private List<ICraftMenuActions> m_CraftMenuActionsCallbackInterfaces = new List<ICraftMenuActions>();
-    private readonly InputAction m_CraftMenu_UnlockTab;
     private readonly InputAction m_CraftMenu_Exit;
     private readonly InputAction m_CraftMenu_Move;
     private readonly InputAction m_CraftMenu_Pause;
@@ -1646,10 +1646,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
         public CraftMenuActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
-        /// <summary>
-        /// Provides access to the underlying input action "CraftMenu/UnlockTab".
-        /// </summary>
-        public InputAction @UnlockTab => m_Wrapper.m_CraftMenu_UnlockTab;
         /// <summary>
         /// Provides access to the underlying input action "CraftMenu/Exit".
         /// </summary>
@@ -1688,9 +1684,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_CraftMenuActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_CraftMenuActionsCallbackInterfaces.Add(instance);
-            @UnlockTab.started += instance.OnUnlockTab;
-            @UnlockTab.performed += instance.OnUnlockTab;
-            @UnlockTab.canceled += instance.OnUnlockTab;
             @Exit.started += instance.OnExit;
             @Exit.performed += instance.OnExit;
             @Exit.canceled += instance.OnExit;
@@ -1711,9 +1704,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="CraftMenuActions" />
         private void UnregisterCallbacks(ICraftMenuActions instance)
         {
-            @UnlockTab.started -= instance.OnUnlockTab;
-            @UnlockTab.performed -= instance.OnUnlockTab;
-            @UnlockTab.canceled -= instance.OnUnlockTab;
             @Exit.started -= instance.OnExit;
             @Exit.performed -= instance.OnExit;
             @Exit.canceled -= instance.OnExit;
@@ -2038,13 +2028,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     /// <seealso cref="CraftMenuActions.RemoveCallbacks(ICraftMenuActions)" />
     public interface ICraftMenuActions
     {
-        /// <summary>
-        /// Method invoked when associated input action "UnlockTab" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnUnlockTab(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Exit" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
